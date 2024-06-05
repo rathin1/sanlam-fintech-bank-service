@@ -1,4 +1,4 @@
-**Structure, Maintainability and Flexibility:**
+**Structure, Maintainability and Flexibility**
 
 In the original snippet, the entire implementation was in one class. I have separated the controller, service, database and client logic into their own classes.
 This follows the separation of concerns aspect of SOLID.  By separating the code into distinct sections based on their responsibilities, each part of the code becomes simpler and easier to understand.
@@ -6,16 +6,16 @@ This makes it easier to maintain and modify the code, as you can focus on one as
 Different teams or developers can work on different components at the same time without stepping on each other's toes. This can speed up the development process.
 Spring Boot makes it easy to create stand-alone, production-grade Spring-based applications. It simplifies the configuration and deployment of Spring applications, making the project more flexible in terms of the environments it can run in.
 
-**Testability:** 
+**Testability** 
 
 When code is divided into separate components with distinct responsibilities, it's easier to write unit tests for each component. You can test each part in isolation, using mock objects or stubs to simulate the behavior of other components if necessary. 
 This leads to more thorough and effective testing.
 
-**Portability:**
+**Portability**
 
 The use of Spring Boot and JPA contribute to the portability of your application, as it should be able to run on any system that supports Java and any database that has a JPA driver.
 
-**Dependency Management:**
+**Dependency Management**
 
 This project uses Maven for dependency management. I have structured and organised the pom.xml file which contributes to effective dependency management.  The project specifies its dependencies clearly in the pom.xml file.
 Each dependency is associated with a specific version, ensuring compatibility and preventing issues that could arise from using incompatible versions of libraries.  
@@ -23,7 +23,7 @@ The use of the <dependencyManagement> section allows the project to manage the v
 The project also uses transitive dependencies, meaning if the project depends on a certain library, and that library depends on another library, Maven automatically manages that relationship and ensures all necessary libraries are included in the project. 
 Overall, the project's dependency management is well-handled, contributing to the maintainability and scalability of the project.
 
-**Observability:**
+**Observability**
 
 I have added logging throughout the project. I have also enabled spring boot actuator and exposed the health, metrics and logging endpoint.
 This will help in monitoring the application and diagnosing issues. The loggers endpoint allows for switching between log levels without restarting the application.
@@ -47,7 +47,15 @@ The project uses Spring Boot, which is designed to be scalable. Spring Boot appl
 Caching can be enabled on the getAccount query to improve performance.
 The publishing of the WithdrawalEvent can be done asynchronously, which means the response to the REST controller will be returned immediately, and the event will be processed in the background.
 
-**Overall Quality:**
+**Fault tolerance**
+
+Retry Mechanisms: In case of temporary issues, such as network glitches, implementing a retry mechanism can help. For example, if the publishWithdrawalEvent method fails due to a temporary issue with Amazon SNS, the application could retry the operation a certain number of times before finally failing.
+
+Circuit Breaker Pattern: This is used to detect failures and encapsulates the logic of preventing a failure from constantly recurring. For example, if the AmazonSnsService is down, instead of continuously trying to call it and failing, the application could "open" the circuit after a certain number of failures and stop calling the service for a certain period of time.
+
+Database Transactions: To ensure data consistency, database transactions can be used. For example, in the withdraw method, if updating the account balance and publishing the withdrawal event should be an atomic operation, a database transaction would ensure that either both operations succeed, or if one fails, the other is not performed.
+
+**Overall Quality**
 
 The project is developed using Java, SQL, Spring Boot, and Maven, which are robust and widely-used technologies. The use of Spring Boot simplifies the configuration and deployment of Spring applications, enhancing the project's flexibility and portability. 
 The code follows the principle of Separation of Concerns, dividing the code into distinct sections based on their responsibilities. This makes the code simpler, easier to understand, and more maintainable. 
