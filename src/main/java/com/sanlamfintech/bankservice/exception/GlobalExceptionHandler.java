@@ -1,4 +1,4 @@
-package com.sanlamfintech.bankservice.exceptionhandler;
+package com.sanlamfintech.bankservice.exception;
 
 import com.sanlamfintech.bankservice.model.response.Response;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +19,18 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Response> handleValidationErrors(MethodArgumentNotValidException ex) {
         List<String> errors = ex.getBindingResult().getFieldErrors().stream().map(DefaultMessageSourceResolvable::getDefaultMessage).collect(Collectors.toList());
         log.error("Validation errors: {}", errors);
+        return ResponseEntity.badRequest().body(new Response(1, "error", errors));
+    }
+
+    @ExceptionHandler(AccountNotFoundException.class)
+    public ResponseEntity<Response> handleAccountNotFoundException(AccountNotFoundException ex) {
+        List<String> errors = List.of(ex.getMessage());
+        return ResponseEntity.badRequest().body(new Response(1, "error", errors));
+    }
+
+    @ExceptionHandler(InsufficientFundsException.class)
+    public ResponseEntity<Response> handleInsufficientFundsException(InsufficientFundsException ex) {
+        List<String> errors = List.of(ex.getMessage());
         return ResponseEntity.badRequest().body(new Response(1, "error", errors));
     }
 }
